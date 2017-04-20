@@ -19,14 +19,15 @@ function [ d_train, d_test, label ] = generateRecordings( A, sigma_squared, sim_
     d_train = zeros(M, num_col_of_d);
     d_test  = zeros(M, num_col_of_d);
     label = zeros(1, num_col_of_d);
-    for node = 1:N
+    
+    for node = 1:M %looping through intracranial nodes
         f = zeros(N,1);
         f(node) = 100;
-        for rep = 1:sim_per_depth_electrode
+        for rep = 1:sim_per_depth_electrode 
             index = (node-1)*sim_per_depth_electrode + rep;
-            noise = sigma_squared * randn(M,1);
+            noise = sqrt(sigma_squared(node,node)) * randn(M,1);
             d_train(:,index) = (A*f + noise);
-            noise = sigma_squared * randn(M,1);
+            noise = sqrt(sigma_squared(node,node)) * randn(M,1);
             d_test(:, index) = A*f + noise;
             label(index) = node;
         end
