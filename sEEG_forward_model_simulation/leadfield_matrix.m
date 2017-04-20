@@ -28,6 +28,12 @@ function A = leadfield_matrix(dipole_grid, sensor_grid, r0, rs)
 %    for each dipole-sensor pair. Keep in mind that *all* dipoles must have
 %    radii less than that of the innermost sensor.
 
+if nargin == 3
+    eeg = 1;
+else
+    eeg = 0;
+end
+
 % Compute cos(theta), for all angles theta between every dipole and sensor pair
 dot_prod_matrix = sensor_grid * dipole_grid';
 costheta_matrix = bsxfun(@rdivide, dot_prod_matrix, sqrt(sum(dipole_grid.^2, 2))');
@@ -42,7 +48,12 @@ costheta_matrix(costheta_matrix < -1) = -1;
 phi = zeros(numel(costheta_matrix), 1);
 
 lmax = 30;
-Cl = zdipole_leadfield(r0, rs);  % Compute Clm for dipole depth of 0.5mm.
+if eeg
+    Cl = zdipole_leadfield_for_eeg(r0);  % Compute Clm for dipole depth of 0.5mm.
+else
+    Cl = zdipole_leadfield(r0,rs);
+end
+    
 Cl = Cl(1:lmax);
 Clm = zeros(1, lmax^2);
 l = 0:lmax-1;
