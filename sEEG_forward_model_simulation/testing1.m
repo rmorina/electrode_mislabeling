@@ -1,5 +1,5 @@
 %% get stereo-eeg electrodes
-load elecpos.mat % the original real eletrode position
+load depthElecpos.mat % the original real eletrode position
 % pre-processing, centre to 0, shrink size
 elecpos(:,1) = elecpos(:,1) - mean(elecpos(:,1));
 elecpos(:,2) = elecpos(:,2) - mean(elecpos(:,2));
