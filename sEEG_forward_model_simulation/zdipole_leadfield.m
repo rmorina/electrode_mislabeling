@@ -1,5 +1,5 @@
 function C = zdipole_leadfield(r0, rs)
-%% Computes the spherical harmonic coefficients of the scalp EEG signal
+%% Computes the spherical harmonic coefficients of the scalp sEEG signal
 %  corresponding to a unit dipole on the z-axis.
 %
 %  Inputs:
