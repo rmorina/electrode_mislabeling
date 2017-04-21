@@ -28,10 +28,12 @@ function [ d_train, d_test, label ] = generateRecordings( A, sigma_squared, sim_
             % generate train data
             index = (node-1)*sim_per_depth_electrode + rep;
             noise = mvnrnd(zeros(1, M), sigma_squared*eye(M))';
+           
             d_train(:,index) = ground_truth + noise;
             
             % generate test data
             noise = mvnrnd(zeros(1, M), sigma_squared*eye(M))';
+            
             d_test(:, index) = ground_truth + noise;
             label(index) = node;
         end
