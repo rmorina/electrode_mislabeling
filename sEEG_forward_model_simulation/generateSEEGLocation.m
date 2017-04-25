@@ -1,25 +1,45 @@
-function elec = generateSEEGLocation(num)
-    %% get stereo-eeg electrodes
-    load depthElecpos.mat % the original real eletrode position
-    % the fourth col is the label
-    % pre-processing, centre to 0, shrink size
-    elecpos(:,1) = elecpos(:,1) - mean(elecpos(:,1));
-    elecpos(:,2) = elecpos(:,2) - mean(elecpos(:,2));
-    elecpos(:,3) = elecpos(:,3) - mean(elecpos(:,3)) + 3;
-    r = get_r(elecpos);
-    % x location denoted the left or right hemisphere
-    elecpos(:,1:3) = 7/max(r) * elecpos(:,1:3); 
-    elec = [-2.229,1.659,0.4885;
-    1.512,1.582,-0.02828;
-    1.378,0.005295,0.0886];
-%         [~,r0index] = sort(r);
-%     sourceElectrode = elecpos(r0index,4);
-%     % praveen assmue size of brain is 8,so the eletrode is insize r=7
-%     source = elecpos(r0index,:);
-%     elecpos(elecpos(:,4) == sourceElectrode,:)=[];
-%     r0 = min(r)/max(r); %source location
+function elec = generateSEEGLocation(num,specs)
+% 
+% specs can be 'same': source in the same hemisphere
+%              'random': in the whole brain
+%              'electrodes': instead of generating source
+if nargin == 1
+    specs = 'random';
 end
 
-function r = get_r(pos)
-    r = sqrt(sum(pos(:,1:3).^2,2));
+switch specs
+    case 'same'
+        n = ceil(sqrt(num*2));
+    case 'random'
+        n = ceil(sqrt(num));
+    case 'electrodes'
+        elec = zeros(num,3);
+        n = ceil(sqrt(num * 2)) + 1;
+        grid = create_grid(n);
+        grid = grid(grid(:,3)>0,:);
+        r = repmat(4 + 0.5*rand(num,1),1,3);
+        start = r .* grid(randperm(size(grid,1),num),:);
+        signs = (start >= 0) * 2 -1;
+        dir = signs .* rand(num,3);
+        r = repmat(2 + rand(num,1),1,3);
+        ends = start + r.* dir;
+        dis = (start - ends)/7;
+        elecx = (repmat(start(:,1),1,8) + dis(:,1) * (0:7))';
+        elecy = (repmat(start(:,2),1,8) + dis(:,2)* (0:7))';
+        elecz = (repmat(start(:,3),1,8) + dis(:,3)* (0:7))';
+        elec = [elecx(:),elecy(:),elecz(:)];
+        return
+    otherwise
+        elec = zeros(num,3);
+        return
 end
+grid1 = create_grid(n);
+grid2 = create_grid(n-1);
+grid3 = create_grid(n+1);
+grid = [grid1;grid2;grid3];
+grid = grid(grid(:,1)>0,:);
+r = repmat(2 + rand(num,1),1,3);
+elec = r .* grid(randperm(size(grid,1),num),:);
+
+end
+
