@@ -13,20 +13,20 @@ switch specs
     case 'random'
         n = ceil(sqrt(num));
     case 'electrodes'
-        elec = zeros(num,3);
+        num_sensors = 7;
         n = ceil(sqrt(num * 2)) + 1;
         grid = create_grid(n);
         grid = grid(grid(:,3)>0,:);
-        r = repmat(4 + 0.5*rand(num,1),1,3);
+        r = repmat(5 + 0.5*rand(num,1),1,3);
         start = r .* grid(randperm(size(grid,1),num),:);
         signs = (start >= 0) * 2 -1;
         dir = signs .* rand(num,3);
         r = repmat(2 + rand(num,1),1,3);
         ends = start + r.* dir;
-        dis = (start - ends)/7;
-        elecx = (repmat(start(:,1),1,8) + dis(:,1) * (0:7))';
-        elecy = (repmat(start(:,2),1,8) + dis(:,2)* (0:7))';
-        elecz = (repmat(start(:,3),1,8) + dis(:,3)* (0:7))';
+        dis = (start - ends)/(num_sensors - 1);
+        elecx = (repmat(start(:,1),1,num_sensors) + dis(:,1) * (0:(num_sensors - 1)))';
+        elecy = (repmat(start(:,2),1,num_sensors) + dis(:,2)* (0:(num_sensors - 1)))';
+        elecz = (repmat(start(:,3),1,num_sensors) + dis(:,3)* (0:(num_sensors - 1)))';
         elec = [elecx(:),elecy(:),elecz(:)];
         return
     otherwise

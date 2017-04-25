@@ -1,4 +1,4 @@
-function elec = generateSEEGLocation(num,specs)
+function elec = generateSEEGLocation_2(num,specs)
 
 load depthElecpos.mat % the original real eletrode position
 % the fourth col is the label
