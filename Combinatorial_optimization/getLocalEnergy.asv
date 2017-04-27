@@ -1,0 +1,16 @@
+function le = getLocalEnergy(elec_signal,refer,side)
+num_depth = size(elec_signal,2);
+corrs = zeros(num_depth,1);
+for i = 1:num_depth
+    %corr = corrcoef(elec_signal(:,i),refer);
+    corr = norm(elec_signal(:,i) - refer);
+    if side(i) == 1
+        %corrs(i) = abs(corr(1,2));
+        corrs(i) = abs(corr);
+    else
+        %corrs(i) = 1/abs(corr(1,2));
+        corrs(i) = abs(corr);
+    end
+end
+le = sum(corrs);
+end

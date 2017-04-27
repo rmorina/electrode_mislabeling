@@ -3,7 +3,7 @@ addpath ../sEEG_forward_model_simulation/
 num_depth = 7;
 num_sensors = 7;
 %source = generateSEEGLocation(1);
-source = [-0.1,-0.1,-0.1];
+source = [-0.1,-0.1,-0.1]; % if use other locations, may perform badly
 elecpos = generateSEEGLocation(num_depth,'electrodes');
 A = generateForwardModel(source, elecpos);
 %% get signal
