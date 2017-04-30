@@ -1,4 +1,3 @@
-%% get stereo-eeg electrodes
 load depthElecpos.mat % the original real eletrode position
 % pre-processing, centre to 0, shrink size
 elecpos(:,1) = elecpos(:,1) - mean(elecpos(:,1));
@@ -30,39 +29,15 @@ ideal_norm=norm(groundTruthMeasure(:));
 noise_norm=sum(rand(elec_num,1).^2)^0.5;
 var=10^(-noise_snr/20)*ideal_norm/noise_norm;
 elec_signal=groundTruthMeasure + rand(elec_num,1)*var;
-%%
+%% generate depth electrode signals
 num_depth = 6;
 elec_signal = reshape(elec_signal,8,num_depth); % 6 depth eletrode, with 8 on each one
 groundTruthMeasure = reshape(groundTruthMeasure,8,num_depth);
-label = zeros(num_depth,1);
-
-% use corrcoef(elec_signal) find the last 3 has high correlation,we see
-% them as a group
-%% find the label for the first electrodes
-for i = 1:3
-    test = repmat(elec_signal(:,i),1,num_depth);
-    dis = sum((test - groundTruthMeasure).^2);
-    [~,pick] = min(dis);
-    label(i) = elecpos(pick*8,4);
+com = perms(1:num_depth);
+corrs = zeros(size(com,1),1);
+for i = 1:size(com,1)
+    corr = corrcoef(groundTruthMeasure,elec_signal(:,com(i,:)));
+    corrs(i) = corr(1,2);
 end
-%% find the label for last 3 eletrodes
-arrange = [1,2,3;1,3,2;2,1,3;2,3,1;3,1,2;3,2,1];
-left_signal = elec_signal(:,4:6);
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Todo: find which labels are left and pick out the groundTruth signal, I
-% just look at the data here.
-left_ground = groundTruthMeasure(:,4:6);
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-cor = zeros(6,1);  
-% 6 is 3!, will become huge with more eletrodes, is this a problem?
-% try different combinations
-for i = 1:6
-    ind = arrange(i,:);
-    tmp = left_signal(:,ind);
-    corr = corrcoef(tmp,left_ground);
-    cor(i) = corr(2,1);
-end
-[~,ind] = max(cor);
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% To do: many magic numbers in this part!!!! Automated labeling  needed.
-labels = arrange(ind,:) + 3;
+[~,index] = max(corrs);
+labels = com(index,:);
