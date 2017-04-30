@@ -12,29 +12,29 @@
 %   d_train and d_test
 
 
-function [ d_train, d_test, label ] = generateRecordings( A, sigma_squared, sim_per_depth_electrode )
+function [ d_train, d_test, label ] = generateRecordings( A, noise_snr, sim_per_depth_electrode )
     N = size(A,2); %number of depth electrodes
     M = size(A,1); %number of eeg electrodes
     num_col_of_d = N * sim_per_depth_electrode;
     d_train = zeros(M, num_col_of_d);
     d_test  = zeros(M, num_col_of_d);
     label = zeros(1, num_col_of_d);
-       
+    
     for node = 1 : N %looping through intracranial nodes
         f = zeros(N,1);
-        f(node) = 1000;
+        f(node) = 100;
         ground_truth = A*f;
         for rep = 1:sim_per_depth_electrode 
             % generate train data
             index = (node-1)*sim_per_depth_electrode + rep;
-            noise = mvnrnd(zeros(1, M), sigma_squared*eye(M))';
-           
-            d_train(:,index) = ground_truth + noise;
+            %noise = mvnrnd(zeros(1, M), sigma_squared*eye(M))';
+            %d_train(:,index) = ground_truth + noise;
             
+            d_train(:,index) = add_noise(ground_truth, noise_snr);
             % generate test data
-            noise = mvnrnd(zeros(1, M), sigma_squared*eye(M))';
-            
-            d_test(:, index) = ground_truth + noise;
+            %noise = mvnrnd(zeros(1, M), sigma_squared*eye(M))';
+            %d_test(:, index) = ground_truth + noise;
+            d_test(:, index) = add_noise(ground_truth, noise_snr);
             label(index) = node;
         end
     end
