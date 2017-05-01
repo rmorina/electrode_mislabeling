@@ -1,4 +1,4 @@
-function elec = generateSEEGLocation(num,specs)
+function elec = generateSEEGLocation(num,specs,num_sensors)
 % 
 % specs can be 'same': source in the same hemisphere
 %              'random': in the whole brain
@@ -13,7 +13,6 @@ switch specs
     case 'random'
         n = ceil(sqrt(num));
     case 'electrodes'
-        num_sensors = 7;
         n = ceil(sqrt(num * 2)) + 1;
         grid = create_grid(n);
         grid = grid(grid(:,3)>0,:);

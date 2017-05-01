@@ -15,7 +15,7 @@ function C = zdipole_leadfield(r0, rs)
 %      Spherical harmonic coefficients of EEG at the sensor radius
 
 % Dipole magnitude
-dipole_mag = 1; % Unit dipole
+dipole_mag = 100; % Unit dipole
 
 % Radii of spheres (in cm) in the 4-sphere model
 r1 = 8;   % Brain
