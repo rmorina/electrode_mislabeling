@@ -6,7 +6,7 @@ noise_snr = 7;
 sim_per_depth_electrode = 1000;
 
 eeg_location = generateEEGLocation(eeg_num);
-depth_electrode_location = generateSEEGLocation(seeg_num);
+depth_electrode_location = generateSEEGLocation_2(seeg_num);
 A = generateForwardModel(depth_electrode_location, eeg_location);
 [d_train, d_test, labels] = generateRecordings(A, noise_snr, sim_per_depth_electrode);
 

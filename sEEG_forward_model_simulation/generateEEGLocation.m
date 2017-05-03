@@ -1,12 +1,21 @@
 function elec = generateEEGLocation(num)
-
-n = ceil(sqrt(num * 2))+1;
-grid = create_grid(n);
-elec = 9.2*grid(grid(:,3)> 0,:);
+n = ceil(sqrt(num));
+grid = 9.2*create_grid(n);
+elec = grid;
+%elec = 9.2*grid(grid(:,3)>= -0.1,:);
 n = size(elec,1);
 index = randperm(n);
 elec = elec(index(1:num),:);
 end
+% function elec = generateEEGLocation(num)
+% 
+% n = ceil(sqrt(num * 2));
+% grid = create_grid(n);
+% elec = 9.2*grid(grid(:,3)>= -0.1,:);
+% n = size(elec,1);
+% index = randperm(n);
+% elec = elec(index(1:num),:);
+% end
 % % format for eegEletrodes:elecpos & labes
 % load 'elec_pos_for_74easycap.mat'
 % % For labels = ['Fp1','Fp2','F3','F4','C3','C4','P3','P4','O1','O2','F8','T4','T6','Fz','Cz','Pz'];

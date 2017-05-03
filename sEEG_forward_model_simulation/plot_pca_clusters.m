@@ -23,9 +23,10 @@ for i = 1:n
     scatter3(X(:,1),X(:,2),X(:,3));
     hold on
 end
-%%%%%%%%%%
+%%
 % For eeg, doing pca on the whole data set looks better. But it doesn't
 % make sense? 
+d_train = all_d_train{1}';
 [COEFF, SCORE, ~, ~, ~, MU] = pca(d_train);
 X = SCORE(:,1:3);
 scatter3(X(:,1),X(:,2),X(:,3));

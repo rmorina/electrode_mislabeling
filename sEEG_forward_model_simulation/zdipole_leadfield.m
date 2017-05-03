@@ -63,7 +63,7 @@ B = zeros(N, LMAX);
 % (given by solving Poisson's equation)
 l = 1:LMAX;
 B(1, :) = dipole_mag / (4 * pi * sigma1 * r0^2) .* l .* (r0 / r1).^(l + 1);
-A(1, :) = B(1, :) / gamma(1, :);
+A(1, :) = B(1, :) ./ gamma(1, :);
 
 % Compute spherical harmonic coefficients of potential for each sphere
 %l = 0:LMAX-1;
