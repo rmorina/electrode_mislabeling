@@ -72,11 +72,14 @@ end
 
 switch specs
     case 'same'
-        
+        n = ceil(sqrt(num))+1;
+        grid = create_grid(n);
+        grid = grid(grid(:,1)>0,:);
+        elec = 3 * grid(randperm(size(grid,1),num),:);       
     case 'random'
         n = ceil(sqrt(num));
         grid = create_grid(n);
-        elec = 3 .* grid(randperm(size(grid,1),num),:);
+        elec = 3 * grid(randperm(size(grid,1),num),:);
     case 'electrodes'
         n = ceil(sqrt(num * 2)) + 1;
         grid = create_grid(n);
@@ -103,6 +106,23 @@ switch specs
             0.748308166609147,2.30305572510677,-0.786817769278513];
         elec = location(1:num,:);
         return
+    case 'interactive'
+%         grid1 = 2*create_grid(9);
+        grid2 = 3*create_grid(10);
+        fig = figure;
+%         scatter3(grid1(:,1),grid1(:,2),grid1(:,3));
+%         hold on
+        scatter3(grid2(:,1),grid2(:,2),grid2(:,3));
+        elec = zeros(6,3);
+        for i = 1:num
+              shg
+              dcm_obj = datacursormode(fig);
+              set(dcm_obj,'DisplayStyle','window',...
+                  'SnapToDataVertex','off','Enable','on')
+              waitforbuttonpress
+              f = getCursorInfo(dcm_obj);
+              elec(i,:) = f.Position;
+        end
     otherwise
         elec = zeros(num,3);
         return
